@@ -4,6 +4,8 @@
 
 The crate is influenced by both Emscripten's `libglemu.js` approach to GL shims and glow's `web_sys` backend structure.
 
+It was mainly created for [rust-skia](https://github.com/rust-skia/rust-skia), as there was no fitting crate that provided the same functionality.
+
 ## Public API
 
 `glemu` intentionally exposes a small public surface:

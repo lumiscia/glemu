@@ -3,4 +3,37 @@ name = "glemu"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
+[features]
+default = ["webgl2"]
+webgl2 = []
+
 [dependencies]
+js-sys = "0.3"
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3", features = [
+    "HtmlCanvasElement",
+    "HtmlImageElement",
+    "HtmlVideoElement",
+    "ImageBitmap",
+    "ImageData",
+    "VideoFrame",
+    "WebGl2RenderingContext",
+    "WebGlBuffer",
+    "WebGlFramebuffer",
+    "WebGlProgram",
+    "WebGlQuery",
+    "WebGlRenderbuffer",
+    "WebGlSampler",
+    "WebGlShader",
+    "WebGlSync",
+    "WebGlTexture",
+    "WebGlTransformFeedback",
+    "WebGlUniformLocation",
+    "WebGlVertexArrayObject",
+] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"

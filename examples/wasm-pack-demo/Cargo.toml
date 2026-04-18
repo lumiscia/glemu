@@ -1,0 +1,15 @@
+[package]
+name = "glemu-wasm-pack-demo"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[workspace]
+
+[dependencies]
+glemu = { path = "../.." }
+js-sys = "0.3"
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3", features = ["WebGl2RenderingContext"] }

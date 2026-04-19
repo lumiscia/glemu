@@ -10,10 +10,10 @@ It was mainly created for [rust-skia](https://github.com/rust-skia/rust-skia), a
 
 `glemu` intentionally exposes a small public surface:
 
-- `Context` for typed WebGL2 access
-- typed handle wrappers: `Buffer`, `Framebuffer`, `Program`, `Query`, `Renderbuffer`, `Sampler`, `Shader`, `Texture`, `TransformFeedback`, and `VertexArray`
+- `Context` for typed WebGL2 access when the `api` feature is enabled
+- typed handle wrappers: `Buffer`, `Framebuffer`, `Program`, `Query`, `Renderbuffer`, `Sampler`, `Shader`, `Texture`, `TransformFeedback`, and `VertexArray` when the `api` feature is enabled
 - `ContextId`
-- `get_proc_address` for proc-table assembly
+- `get_proc_address` for proc-table assembly when the `raw-proc` feature is enabled
 - context registry helpers for proc-table consumers:
   - `register_gl_context`
   - `set_gl_context`
@@ -22,9 +22,33 @@ It was mainly created for [rust-skia](https://github.com/rust-skia/rust-skia), a
 
 Everything under the raw implementation modules is internal and may change without notice.
 
+## Feature flags
+
+The default feature set keeps the current out-of-the-box behavior:
+
+- `api`
+- `raw-proc`
+- `image-data`
+- `dom-uploads`
+
+Optional feature:
+
+- `video-frame`: enables `VideoFrame` upload helpers and still requires `--cfg=web_sys_unstable_apis`
+
+To minimize wasm size, disable default features and opt back into only what you use:
+
+```toml
+glemu = { version = "...", default-features = false, features = ["api"] }
+```
+
+Upload helper gating:
+
+- `image-data` enables `ImageData` upload helpers
+- `dom-uploads` enables `ImageBitmap`, `HtmlCanvasElement`, `HtmlImageElement`, and `HtmlVideoElement` upload helpers
+
 ## Proc-address API
 
-Use `get_proc_address("glFunctionName")` when you need a raw function pointer by symbol name. If a consumer wants a callback-style proc resolver, it can trivially wrap `get_proc_address` itself.
+Use `get_proc_address("glFunctionName")` when you need a raw function pointer by symbol name. If a consumer wants a callback-style proc resolver, it can trivially wrap `get_proc_address` itself. This API is available when `raw-proc` is enabled.
 
 The proc table surface keeps the expected GL symbol names stable, including supported aliases such as `glBindVertexArrayOES`.
 
@@ -40,7 +64,7 @@ For proc-table consumers, register a `web_sys::WebGl2RenderingContext` with `reg
 - `Context::current` and `Context::from_context_id` recover typed access later
 - `Context::make_current` switches the active registered context
 - resource creation methods return typed handles bound to the originating context
-- texture upload helpers cover byte uploads and DOM/media sources such as `ImageData`, `HtmlImageElement`, `HtmlCanvasElement`, `HtmlVideoElement`, `ImageBitmap`, and optionally `VideoFrame`
+- texture upload helpers are feature-gated by source type so consumers can opt out of unused DOM/media upload surfaces
 
 A minimal browser demo lives in `examples/wasm-pack-demo`.
 
@@ -51,3 +75,5 @@ python3 -m http.server --directory web 8001
 ```
 
 Then open <http://localhost:8001/>.
+
+Note that this project was created mostly with AI, and there may be things that were missed in my brief review of it, but I have tested it and it is functional in `rust-skia`.

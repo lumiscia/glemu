@@ -1,8 +1,11 @@
 use super::context::Context;
 use wasm_bindgen::JsValue;
-use web_sys::{
-    HtmlCanvasElement, HtmlImageElement, HtmlVideoElement, ImageBitmap, ImageData, VideoFrame,
-};
+#[cfg(feature = "image-data")]
+use web_sys::ImageData;
+#[cfg(feature = "video-frame")]
+use web_sys::VideoFrame;
+#[cfg(feature = "dom-uploads")]
+use web_sys::{HtmlCanvasElement, HtmlImageElement, HtmlVideoElement, ImageBitmap};
 
 macro_rules! impl_tex_image_2d_uploads {
     (
@@ -124,6 +127,7 @@ macro_rules! impl_tex_sub_image_2d_uploads {
 }
 
 impl Context {
+    #[cfg(feature = "dom-uploads")]
     impl_tex_image_2d_uploads!(
         tex_image_2d_with_image_bitmap,
         tex_image_2d_with_image_bitmap_and_width_and_height,
@@ -133,6 +137,7 @@ impl Context {
         tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_image_bitmap
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_image_2d_uploads!(
         tex_image_2d_with_html_canvas,
         tex_image_2d_with_html_canvas_and_width_and_height,
@@ -142,6 +147,7 @@ impl Context {
         tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_html_canvas_element
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_image_2d_uploads!(
         tex_image_2d_with_html_image,
         tex_image_2d_with_html_image_and_width_and_height,
@@ -151,6 +157,7 @@ impl Context {
         tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_html_image_element
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_image_2d_uploads!(
         tex_image_2d_with_html_video,
         tex_image_2d_with_html_video_and_width_and_height,
@@ -160,6 +167,7 @@ impl Context {
         tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_html_video_element
     );
 
+    #[cfg(feature = "image-data")]
     impl_tex_image_2d_uploads!(
         tex_image_2d_with_image_data,
         tex_image_2d_with_image_data_and_width_and_height,
@@ -170,6 +178,7 @@ impl Context {
     );
 
     impl_tex_image_2d_uploads!(
+        #[cfg(feature = "video-frame")]
         tex_image_2d_with_video_frame,
         tex_image_2d_with_video_frame_and_width_and_height,
         VideoFrame,
@@ -178,6 +187,7 @@ impl Context {
         tex_image_2d_with_i32_and_i32_and_i32_and_format_and_type_and_video_frame
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_sub_image_2d_uploads!(
         tex_sub_image_2d_with_image_bitmap,
         tex_sub_image_2d_with_image_bitmap_and_width_and_height,
@@ -187,6 +197,7 @@ impl Context {
         tex_sub_image_2d_with_i32_and_i32_and_u32_and_type_and_image_bitmap
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_sub_image_2d_uploads!(
         tex_sub_image_2d_with_html_canvas,
         tex_sub_image_2d_with_html_canvas_and_width_and_height,
@@ -196,6 +207,7 @@ impl Context {
         tex_sub_image_2d_with_i32_and_i32_and_u32_and_type_and_html_canvas_element
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_sub_image_2d_uploads!(
         tex_sub_image_2d_with_html_image,
         tex_sub_image_2d_with_html_image_and_width_and_height,
@@ -205,6 +217,7 @@ impl Context {
         tex_sub_image_2d_with_i32_and_i32_and_u32_and_type_and_html_image_element
     );
 
+    #[cfg(feature = "dom-uploads")]
     impl_tex_sub_image_2d_uploads!(
         tex_sub_image_2d_with_html_video,
         tex_sub_image_2d_with_html_video_and_width_and_height,
@@ -214,6 +227,7 @@ impl Context {
         tex_sub_image_2d_with_i32_and_i32_and_u32_and_type_and_html_video_element
     );
 
+    #[cfg(feature = "image-data")]
     impl_tex_sub_image_2d_uploads!(
         tex_sub_image_2d_with_image_data,
         tex_sub_image_2d_with_image_data_and_width_and_height,
@@ -224,6 +238,7 @@ impl Context {
     );
 
     impl_tex_sub_image_2d_uploads!(
+        #[cfg(feature = "video-frame")]
         tex_sub_image_2d_with_video_frame,
         tex_sub_image_2d_with_video_frame_and_width_and_height,
         VideoFrame,

@@ -2,24 +2,34 @@
 name = "glemu"
 version = "0.1.0"
 edition = "2024"
+description = "WebGL (via web_sys) to GL shims for Rust, based on Emscripten's GL emulation layer"
+license = "MIT"
+repository = "https://github.com/lumiscia/glemu"
+readme = "README.md"
+keywords = ["wasm", "webgl", "opengl", "skia"]
+categories = ["wasm", "rendering"]
 
 [lib]
 path = "src/lib.rs"
 
 [features]
-default = ["webgl2"]
-webgl2 = []
+default = ["api", "raw-proc", "image-data", "dom-uploads"]
+api = []
+raw-proc = []
+image-data = ["api", "web-sys/ImageData"]
+dom-uploads = [
+    "api",
+    "web-sys/HtmlCanvasElement",
+    "web-sys/HtmlImageElement",
+    "web-sys/HtmlVideoElement",
+    "web-sys/ImageBitmap",
+]
+video-frame = ["api", "web-sys/VideoFrame"]
 
 [dependencies]
 js-sys = "0.3"
 wasm-bindgen = "0.2"
 web-sys = { version = "0.3", features = [
-    "HtmlCanvasElement",
-    "HtmlImageElement",
-    "HtmlVideoElement",
-    "ImageBitmap",
-    "ImageData",
-    "VideoFrame",
     "WebGl2RenderingContext",
     "WebGlBuffer",
     "WebGlFramebuffer",

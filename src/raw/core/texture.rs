@@ -188,6 +188,9 @@ pub(crate) unsafe extern "C" fn gl_tex_image_2d(
 }
 
 pub(crate) unsafe extern "C" fn gl_tex_parameterf(target: GLenum, pname: GLenum, param: GLfloat) {
+    if should_ignore_texture_parameter(pname) {
+        return;
+    }
     with_gl(|s| s.gl.tex_parameterf(target, pname, param));
 }
 
@@ -196,6 +199,9 @@ pub(crate) unsafe extern "C" fn gl_tex_parameterfv(
     pname: GLenum,
     params: *const GLfloat,
 ) {
+    if should_ignore_texture_parameter(pname) {
+        return;
+    }
     with_gl(|s| {
         if !params.is_null() {
             s.gl.tex_parameterf(target, pname, unsafe { *params });
@@ -204,6 +210,9 @@ pub(crate) unsafe extern "C" fn gl_tex_parameterfv(
 }
 
 pub(crate) unsafe extern "C" fn gl_tex_parameteri(target: GLenum, pname: GLenum, param: GLint) {
+    if should_ignore_texture_parameter(pname) {
+        return;
+    }
     with_gl(|s| s.gl.tex_parameteri(target, pname, param));
 }
 
@@ -212,11 +221,27 @@ pub(crate) unsafe extern "C" fn gl_tex_parameteriv(
     pname: GLenum,
     params: *const GLint,
 ) {
+    if should_ignore_texture_parameter(pname) {
+        return;
+    }
     with_gl(|s| {
         if !params.is_null() {
             s.gl.tex_parameteri(target, pname, unsafe { *params });
         }
     });
+}
+
+fn should_ignore_texture_parameter(pname: GLenum) -> bool {
+    matches!(
+        pname,
+        0x1004 // GL_TEXTURE_BORDER_COLOR
+            | 0x84FE // GL_TEXTURE_MAX_ANISOTROPY_EXT
+            | 0x8E42 // GL_TEXTURE_SWIZZLE_R
+            | 0x8E43 // GL_TEXTURE_SWIZZLE_G
+            | 0x8E44 // GL_TEXTURE_SWIZZLE_B
+            | 0x8E45 // GL_TEXTURE_SWIZZLE_A
+            | 0x8E46 // GL_TEXTURE_SWIZZLE_RGBA
+    )
 }
 
 pub(crate) unsafe extern "C" fn gl_tex_sub_image_2d(
